@@ -175,12 +175,6 @@ lz4_pack_leparse(const void *src, void *dst, unsigned long src_size, void *workm
 				max_len = len;
 
 				// Update cost if cheaper
-				//
-				// If the choice is between a literal and a match
-				// with the same cost, choose the match. This is
-				// because the match is able to encode any literals
-				// preceding it.
-				//
 				if (min_cost < cost[cur]) {
 					cost[cur] = min_cost;
 					mpos[cur] = pos;
