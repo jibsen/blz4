@@ -67,7 +67,7 @@ lz4_depack(const void *src, void *dst, unsigned long packed_size)
 		/* Check for last incomplete sequence */
 		if (cur == packed_size) {
 			/* Check parsing restrictions */
-			if (packed_size >= 5 && lit_len < 5) {
+			if (dst_size >= 5 && lit_len < 5) {
 				return LZ4_ERROR;
 			}
 
