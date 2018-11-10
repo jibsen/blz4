@@ -11,7 +11,7 @@ project('blz4', 'c',
   license : 'Zlib'
 )
 
-lib = library('lz4', 'lz4.c', 'depack.c')
+lib = library('lz4', 'lz4.c', 'lz4_depack.c')
 
 lz4_dep = declare_dependency(
   include_directories : include_directories('.'),
