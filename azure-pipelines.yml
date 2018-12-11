@@ -1,0 +1,61 @@
+name: $(Date:yyyyMMdd).$(BuildID)
+
+jobs:
+- job: Linux
+  pool:
+    vmImage: 'ubuntu-16.04'
+
+  steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: 3.6
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel
+      pip install meson
+    displayName: 'Install Meson'
+
+  - script: sudo apt-get update && sudo apt-get install ninja-build
+    displayName: 'Install Ninja'
+
+  - script: meson setup build
+    displayName: 'Generate'
+
+  - script: |
+      cd build
+      ninja
+    displayName: 'Build'
+
+- job: Windows
+  pool:
+    vmImage: 'vs2017-win2016'
+
+  steps:
+  - task: BatchScript@1
+    inputs:
+      filename: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Enterprise\\Common7\\Tools\\VsDevCmd.bat"
+      arguments: -no_logo -arch=amd64
+      modifyEnvironment: true
+    displayName: Setup Environment Variables
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: 3.6
+      architecture: 'x64'
+
+  - script: |
+      python -m pip install --upgrade pip setuptools wheel
+      pip install meson
+    displayName: 'Install Meson'
+
+  - script: choco install ninja
+    displayName: 'Install Ninja'
+
+  - script: meson setup build
+    displayName: 'Generate'
+
+  - script: |
+      cd build
+      ninja
+    displayName: 'Build'
