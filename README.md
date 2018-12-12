@@ -2,6 +2,8 @@
 blz4
 ====
 
+[![Build Status](https://dev.azure.com/jibsenorg/jibsen/_apis/build/status/jibsen.blz4?branchName=master)](https://dev.azure.com/jibsenorg/jibsen/_build/latest?definitionId=1?branchName=master)
+
 About
 -----
 
