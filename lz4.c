@@ -183,7 +183,7 @@ lz4_pack_level(const void *src, void *dst, unsigned long src_size,
 	}
 }
 
-// clang -g -O1 -fsanitize=fuzzer,address -DLZ4_FUZZING lz4.c depack.c
+// clang -g -O1 -fsanitize=fuzzer,address -DLZ4_FUZZING lz4.c lz4_depack.c
 #if defined(LZ4_FUZZING)
 #include <limits.h>
 #include <stddef.h>
