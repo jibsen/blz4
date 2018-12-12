@@ -396,7 +396,7 @@ print_syntax(void)
 	      "  -v, --verbose          verbose mode\n"
 	      "  -V, --version          print version and exit\n"
 	      "\n"
-	      "PLEASE NOTE: This is an experiment, use at your own risk.", stdout);
+	      "PLEASE NOTE: This is an experiment, use at your own risk.\n", stdout);
 }
 
 static void
