@@ -25,7 +25,17 @@ jobs:
       pip install meson
     displayName: Install Meson
 
-  - script: sudo apt-get update && sudo apt-get -q install ninja-build
+  - script: |
+      mkdir -p ~/.local/bin
+      echo "##vso[task.prependpath]$HOME/.local/bin"
+    displayName: Add ~/.local/bin to path
+
+  - script: |
+      cd $(Agent.WorkFolder)
+      git clone --depth 1 https://github.com/ninja-build/ninja.git
+      cd ninja
+      ./configure.py --bootstrap
+      cp ninja ~/.local/bin
     displayName: Install Ninja
 
   - script: meson setup build
