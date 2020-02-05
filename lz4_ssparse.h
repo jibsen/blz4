@@ -3,7 +3,7 @@
 //
 // Backwards dynamic programming parse
 //
-// Copyright (c) 2018 Joergen Ibsen
+// Copyright (c) 2018-2020 Joergen Ibsen
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -189,7 +189,7 @@ lz4_pack_ssparse(const void *src, void *dst, unsigned long src_size, void *workm
 				}
 			}
 
-			if (len >= accept_len) {
+			if (len >= accept_len || len == len_limit) {
 				break;
 			}
 		}
