@@ -3,7 +3,7 @@
  *
  * C/C++ header file
  *
- * Copyright (c) 2018 Joergen Ibsen
+ * Copyright (c) 2018-2020 Joergen Ibsen
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -28,6 +28,7 @@
 #ifndef LZ4_H_INCLUDED
 #define LZ4_H_INCLUDED
 
+#include <stddef.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -88,8 +89,8 @@ lz4_max_packed_size(unsigned long src_size);
  * @param level compression level
  * @return required size in bytes of `workmem` buffer
  */
-LZ4_API unsigned long
-lz4_workmem_size_level(unsigned long src_size, int level);
+LZ4_API size_t
+lz4_workmem_size_level(size_t src_size, int level);
 
 /**
  * Compress `src_size` bytes of data from `src` to `dst`.

@@ -3,7 +3,7 @@
 //
 // C packer
 //
-// Copyright (c) 2018 Joergen Ibsen
+// Copyright (c) 2018-2020 Joergen Ibsen
 //
 // This software is provided 'as-is', without any express or implied
 // warranty. In no event will the authors be held liable for any damages
@@ -56,9 +56,9 @@
 
 #define LOOKUP_SIZE (1UL << LZ4_HASH_BITS)
 
-#define WORKMEM_SIZE (LOOKUP_SIZE * sizeof(unsigned long))
+#define WORKMEM_SIZE (LOOKUP_SIZE * sizeof(uint32_t))
 
-#define NO_MATCH_POS ((unsigned long) -1)
+#define NO_MATCH_POS ((uint32_t) -1)
 
 static int
 lz4_log2(unsigned long n)
@@ -92,12 +92,12 @@ lz4_hash4_bits(const unsigned char *p, int bits)
 {
 	assert(bits > 0 && bits <= 32);
 
-	unsigned long val = (unsigned long) p[0]
-	                 | ((unsigned long) p[1] << 8)
-	                 | ((unsigned long) p[2] << 16)
-	                 | ((unsigned long) p[3] << 24);
+	uint32_t val = (uint32_t) p[0]
+	             | ((uint32_t) p[1] << 8)
+	             | ((uint32_t) p[2] << 16)
+	             | ((uint32_t) p[3] << 24);
 
-	return ((val * 2654435761UL) & 0xFFFFFFFFUL) >> (32 - bits);
+	return (val * UINT32_C(2654435761)) >> (32 - bits);
 }
 
 static unsigned long
@@ -141,23 +141,23 @@ lz4_max_packed_size(unsigned long src_size)
 }
 
 // Include compression algorithms used by lz4_pack_level
+#include "lz4_btparse.h"
 #include "lz4_leparse.h"
-#include "lz4_ssparse.h"
 
-unsigned long
-lz4_workmem_size_level(unsigned long src_size, int level)
+size_t
+lz4_workmem_size_level(size_t src_size, int level)
 {
 	switch (level) {
 	case 5:
 	case 6:
 	case 7:
+		return lz4_leparse_workmem_size(src_size);
 	case 8:
 	case 9:
-		return lz4_leparse_workmem_size(src_size);
 	case 10:
-		return lz4_ssparse_workmem_size(src_size);
+		return lz4_btparse_workmem_size(src_size);
 	default:
-		return LZ4_ERROR;
+		return (size_t) -1;
 	}
 }
 
@@ -173,11 +173,11 @@ lz4_pack_level(const void *src, void *dst, unsigned long src_size,
 	case 7:
 		return lz4_pack_leparse(src, dst, src_size, workmem, 64, 64);
 	case 8:
-		return lz4_pack_leparse(src, dst, src_size, workmem, 512, 128);
+		return lz4_pack_btparse(src, dst, src_size, workmem, 16, 96);
 	case 9:
-		return lz4_pack_leparse(src, dst, src_size, workmem, 4096, 256);
+		return lz4_pack_btparse(src, dst, src_size, workmem, 32, 224);
 	case 10:
-		return lz4_pack_ssparse(src, dst, src_size, workmem, ULONG_MAX, ULONG_MAX);
+		return lz4_pack_btparse(src, dst, src_size, workmem, ULONG_MAX, ULONG_MAX);
 	default:
 		return LZ4_ERROR;
 	}

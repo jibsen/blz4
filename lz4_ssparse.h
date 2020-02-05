@@ -28,8 +28,8 @@
 #ifndef LZ4_SSPARSE_H_INCLUDED
 #define LZ4_SSPARSE_H_INCLUDED
 
-static unsigned long
-lz4_ssparse_workmem_size(unsigned long src_size)
+static size_t
+lz4_ssparse_workmem_size(size_t src_size)
 {
 	return (LOOKUP_SIZE < 2 * src_size ? 3 * src_size : src_size + LOOKUP_SIZE)
 	     * sizeof(unsigned long);
