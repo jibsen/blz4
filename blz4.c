@@ -1,7 +1,7 @@
 /*
  * blz4 - Example of LZ4 compression with BriefLZ algorithms
  *
- * Copyright (c) 2018 Joergen Ibsen
+ * Copyright (c) 2018-2020 Joergen Ibsen
  *
  * This software is provided 'as-is', without any express or implied
  * warranty. In no event will the authors be held liable for any damages
@@ -404,7 +404,7 @@ print_version(void)
 {
 	fputs("blz4 " LZ4_VER_STRING "\n"
 	      "\n"
-	      "Copyright (c) 2018 Joergen Ibsen\n"
+	      "Copyright (c) 2018-2020 Joergen Ibsen\n"
 	      "\n"
 	      "Licensed under the zlib license (Zlib).\n"
 	      "There is NO WARRANTY, to the extent permitted by law.\n", stdout);

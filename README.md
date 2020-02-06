@@ -59,7 +59,7 @@ ninja
 
 You can also simply compile and link the source files.
 
-blz4 includes the leparse and ssparse algorithms from BriefLZ, which gives
+blz4 includes the leparse and btparse algorithms from BriefLZ, which gives
 compression levels `-5` to `-9` and the **very** slow `--optimal`.
 
 [Meson]: https://mesonbuild.com/

@@ -38,7 +38,7 @@ extern "C" {
 #define LZ4_VER_MAJOR 0        /**< Major version number */
 #define LZ4_VER_MINOR 1        /**< Minor version number */
 #define LZ4_VER_PATCH 0        /**< Patch version number */
-#define LZ4_VER_STRING "0.1.0" /**< Version number as a string */
+#define LZ4_VER_STRING "0.2.0" /**< Version number as a string */
 
 #ifdef LZ4_DLL
 #  if defined(_WIN32) || defined(__CYGWIN__)
