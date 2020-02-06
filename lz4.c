@@ -103,35 +103,13 @@ lz4_hash4_bits(const unsigned char *p, int bits)
 static unsigned long
 lz4_literal_cost(unsigned long nlit)
 {
-	unsigned long cost = 0;
-
-	while (nlit >= 15 + 255) {
-		++cost;
-		nlit -= 255;
-	}
-	if (nlit >= 15) {
-		++cost;
-		nlit = 15;
-	}
-
-	return cost;
+	return (nlit + 255 - 15) / 255;
 }
 
 static unsigned long
 lz4_match_cost(unsigned long len)
 {
-	unsigned long cost = 1 + 2;
-
-	while (len >= 19 + 255) {
-		++cost;
-		len -= 255;
-	}
-	if (len >= 19) {
-		++cost;
-		len = 19;
-	}
-
-	return cost;
+	return 1 + 2 + (len + 255 - 19) / 255;
 }
 
 unsigned long
