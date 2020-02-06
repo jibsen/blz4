@@ -133,6 +133,7 @@ lz4_pack_btparse(const void *src, void *dst, unsigned long src_size, void *workm
 		}
 
 		unsigned long max_len = 3;
+		unsigned long max_len_pos = NO_MATCH_POS;
 
 		// Look up first match for current position
 		//
@@ -185,38 +186,10 @@ lz4_pack_btparse(const void *src, void *dst, unsigned long src_size, void *workm
 				++len;
 			}
 
-			// Extend current match if possible
-			//
-			// Note that we are checking matches in order from the
-			// closest and back. This means for a match further
-			// away, the encoding of all lengths up to the current
-			// max length will always be longer or equal, so we need
-			// only consider the extension.
-			//
+			// Update longest match found
 			if (cur == next_match_cur && len > max_len) {
-				for (unsigned long i = max_len + 1; i <= len; ++i) {
-					unsigned long match_cost = lz4_match_cost(i);
-
-					assert(match_cost < UINT32_MAX - cost[cur]);
-
-					unsigned long cost_there = cost[cur] + match_cost;
-
-					// Update cost if cheaper
-					//
-					// If the choice is between a literal and a match
-					// with the same cost, choose the match. This is
-					// because the match is able to encode any literals
-					// preceding it.
-					//
-					if (cost_there < cost[cur + i]
-					 || (mlen[cur + i] == 1 && cost_there == cost[cur + i])) {
-						cost[cur + i] = cost_there;
-						mpos[cur + i] = pos;
-						mlen[cur + i] = i;
-					}
-				}
-
 				max_len = len;
+				max_len_pos = pos;
 
 				if (len >= accept_len) {
 					next_match_cur = cur + len;
@@ -265,6 +238,28 @@ lz4_pack_btparse(const void *src, void *dst, unsigned long src_size, void *workm
 				assert(*gt_node == NO_MATCH_POS || *gt_node < pos);
 				pos = *gt_node;
 				gt_len = len;
+			}
+		}
+
+		// Update costs for longest match found
+		if (max_len_pos != NO_MATCH_POS) {
+			for (unsigned long i = 4; i <= max_len; ++i) {
+				unsigned long match_cost = lz4_match_cost(i);
+
+				assert(match_cost < UINT32_MAX - cost[cur]);
+
+				unsigned long cost_there = cost[cur] + match_cost;
+
+				// If the choice is between a literal and a
+				// match with the same cost, choose the match.
+				// This is because the match is able to encode
+				// any literals preceding it.
+				if (cost_there < cost[cur + i]
+				 || (mlen[cur + i] == 1 && cost_there == cost[cur + i])) {
+					cost[cur + i] = cost_there;
+					mpos[cur + i] = max_len_pos;
+					mlen[cur + i] = i;
+				}
 			}
 		}
 	}
