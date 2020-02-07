@@ -242,8 +242,26 @@ lz4_pack_btparse(const void *src, void *dst, unsigned long src_size, void *workm
 		}
 
 		// Update costs for longest match found
+		//
+		// If the match is longer than 18, decreasing the match length
+		// by up to 255 will result in saving 1 byte on the match
+		// length encoding.
+		//
+		// On the other hand, the best case is that the following
+		// sequence is a match that can be extended to the left to
+		// cover the bytes we no longer match, which increases the
+		// match length of that match. We can do this at most 254
+		// times before its match length encoding goes up 1 byte.
+		//
+		// So we only have to check the last 255 posssible match
+		// lengths.
+		//
+		// This optimization is from lz4x by Ilya Muravyov.
+		//
 		if (max_len_pos != NO_MATCH_POS) {
-			for (unsigned long i = 4; i <= max_len; ++i) {
+			unsigned long min_len = max_len > (254 + 4) ? max_len - 254 : 4;
+
+			for (unsigned long i = min_len; i <= max_len; ++i) {
 				unsigned long match_cost = lz4_match_cost(i);
 
 				assert(match_cost < UINT32_MAX - cost[cur]);
