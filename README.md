@@ -68,10 +68,6 @@ compression levels `-5` to `-9` and the **very** slow `--optimal`.
 Notes
 -----
 
-  - blz4 is finding the closest match of each length, but since match offsets
-    are coded using two bytes regardless of distance, it is enough to find the
-    longest match at each position. If we replaced the match finding with a
-    suffix array or -tree, that should speed up ssparse.
   - LZ4 appears to do flexible parsing, is very close to optimal, and much
     faster.
 
