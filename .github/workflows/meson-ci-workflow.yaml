@@ -1,0 +1,73 @@
+name: Meson CI
+
+on: [push, pull_request]
+
+jobs:
+  windows:
+    name: Windows ${{ matrix.config.name }}
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        config:
+          - name: MSVC x86
+            arch: x86
+
+          - name: MSVC x64
+            arch: amd64
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+
+      - name: Install Meson
+        run: pip install meson ninja
+
+      - name: Configure
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -no_logo -arch=${{ matrix.config.arch }}
+          meson setup build
+
+      - name: Build
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -no_logo -arch=${{ matrix.config.arch }}
+          ninja -C build
+
+  linux:
+    name: Linux ${{ matrix.config.name }}
+    runs-on: ubuntu-latest
+    env:
+      CC: ${{ matrix.config.cc }}
+      CXX: ${{ matrix.config.cxx }}
+
+    strategy:
+      matrix:
+        config:
+          - name: GCC
+            cc: gcc
+            cxx: g++
+
+          - name: Clang
+            cc: clang
+            cxx: clang++
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: '3.x'
+
+      - name: Install Meson
+        run: pip install meson ninja
+
+      - name: Configure
+        run: meson setup build
+
+      - name: Build
+        run: ninja -C build
