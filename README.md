@@ -2,7 +2,7 @@
 blz4
 ====
 
-![Meson CI](https://github.com/jibsen/blz4/workflows/Meson%20CI/badge.svg?branch=master)
+![Meson CI](https://github.com/jibsen/blz4/workflows/Meson%20CI/badge.svg)
 
 About
 -----
