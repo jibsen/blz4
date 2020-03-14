@@ -2,7 +2,7 @@
 blz4
 ====
 
-![Meson CI](https://github.com/jibsen/blz4/workflows/Meson%20CI/badge.svg)
+[![Meson CI](https://github.com/jibsen/blz4/workflows/Meson%20CI/badge.svg)](https://github.com/jibsen/blz4/actions)
 
 About
 -----
