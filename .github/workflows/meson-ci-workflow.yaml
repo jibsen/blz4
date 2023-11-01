@@ -17,9 +17,9 @@ jobs:
             arch: amd64
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
@@ -27,16 +27,10 @@ jobs:
         run: pip install meson ninja
 
       - name: Configure
-        shell: cmd
-        run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -no_logo -arch=${{ matrix.config.arch }}
-          meson setup build
+        run: meson setup --vsenv build
 
       - name: Build
-        shell: cmd
-        run: |
-          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -no_logo -arch=${{ matrix.config.arch }}
-          ninja -C build
+        run: meson compile -C build -v
 
   linux:
     name: Linux ${{ matrix.config.name }}
@@ -57,9 +51,9 @@ jobs:
             cxx: clang++
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
 
@@ -70,4 +64,4 @@ jobs:
         run: meson setup build
 
       - name: Build
-        run: ninja -C build
+        run: meson compile -C build -v
